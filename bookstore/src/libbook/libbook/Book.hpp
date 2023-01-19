@@ -9,8 +9,6 @@
 
 #include <iterator>
 
-// #include <libstore/BookStore.hpp>
-
 #include <algorithm>
 
 class Book {
@@ -29,6 +27,8 @@ public:
         : ISBN(ISBN), author(author), price(price), pages(pages)
     {
     }
+
+    std::string& get_isbn();
 
 private:
     std::string ISBN;

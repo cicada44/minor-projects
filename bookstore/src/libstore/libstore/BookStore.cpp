@@ -23,17 +23,21 @@ void BookStore::add_book(const Book& book)
 
 bool BookStore::remove_book(const std::string& ISBN_to_delete)
 {
-    bool flag = 0;
-    books.erase(std::find_if(
+    auto deleted_book = std::find_if(
             books.begin(), books.end(), [ISBN_to_delete](const Book& book) {
-                // flag = 1;
                 return (ISBN_to_delete == book.ISBN);
-            }));
+            });
 
-    return flag;
+    if (deleted_book == books.end()) {
+        return 0;
+    }
+
+    books.erase(deleted_book);
+
+    return 1;
 }
 
-bool BookStore::find_book(const std::string& isbn_to_find)
+bool BookStore::check_book(const std::string& isbn_to_find)
 {
     return (std::find_if(
                     books.begin(),
@@ -44,6 +48,15 @@ bool BookStore::find_book(const std::string& isbn_to_find)
             != books.end())
             ? 1
             : 0;
+}
+
+Book BookStore::find_book(const std::string& isbn_to_find)
+{
+    auto book
+            = std::find_if(books.begin(), books.end(), [isbn_to_find](Book& b) {
+                  return (b.ISBN == isbn_to_find);
+              });
+    return (book == books.end()) ? Book() : *book;
 }
 
 void interactive_mode(std::ostream& os, std::istream& is, BookStore& store)
@@ -82,8 +95,6 @@ void interactive_mode(std::ostream& os, std::istream& is, BookStore& store)
            << setfill(' ') << '\n';
     }
 
-    // std::istream_iterator<int> user_option(is);
-
     Book input_book;
 
     while (1) {
@@ -92,15 +103,28 @@ void interactive_mode(std::ostream& os, std::istream& is, BookStore& store)
 
         if (option == 1) {
             is >> input_book;
+
             store.add_book(input_book);
         } else if (option == 2) {
             string input_isbn;
             is >> input_isbn;
-            store.remove_book(input_isbn);
+
+            if (store.remove_book(input_isbn)) {
+                os << "DELETED BOOK WITH ISBN " << input_isbn << '\n';
+            } else {
+                os << "BOOK WITH ISBN " << input_isbn << "NOT FOUND!\n";
+            }
         } else if (option == 3) {
             string input_isbn;
             is >> input_isbn;
-            store.find_book(input_isbn);
+
+            Book find_book = store.find_book(input_isbn);
+
+            if (find_book.get_isbn().empty()) {
+                os << "BOOK WITH ISBN " << input_isbn << "NOT FOUND!\n";
+            } else {
+                os << find_book << '\n';
+            }
         } else if (option == 4) {
             os << store;
         } else {

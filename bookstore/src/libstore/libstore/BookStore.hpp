@@ -42,7 +42,8 @@ public:
     void add_book(const Book& book);
     bool remove_book(const std::string& ISBN_to_delete);
 
-    bool find_book(const std::string& isbn_to_find);
+    bool check_book(const std::string& isbn_to_find);
+    Book find_book(const std::string& isbn_to_find);
 
 private:
     double revenue;

@@ -2,9 +2,14 @@
 
 #include <libbook/Book.hpp>
 
+std::string& Book::get_isbn()
+{
+    return ISBN;
+}
+
 std::ostream& operator<<(std::ostream& os, const Book& b)
 {
-    os << b.ISBN << ' ' << b.author << ' ' << b.pages << ' ' << b.price << '\n';
+    os << b.ISBN << ' ' << b.author << ' ' << b.pages << ' ' << b.price;
     return os;
 }
 
