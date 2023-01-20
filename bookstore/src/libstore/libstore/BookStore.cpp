@@ -2,8 +2,6 @@
 
 #include <libbook/Book.hpp>
 
-#include <functional>
-
 #include <iostream>
 
 #include <iomanip>
