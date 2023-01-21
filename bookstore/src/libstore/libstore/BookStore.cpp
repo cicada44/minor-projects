@@ -59,7 +59,6 @@ Book BookStore::find_book(const std::string& isbn_to_find)
 
 void interactive_mode(std::ostream& os, std::istream& is, BookStore& store)
 {
-    using std::function;
     using std::map;
     using std::setfill;
     using std::setw;
