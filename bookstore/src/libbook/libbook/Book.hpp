@@ -1,25 +1,15 @@
-#ifndef __BOOK_H__
-#define __BOOK_H__
+#pragma once
 
 #include <iostream>
 
 #include <string>
 
-#include <vector>
-
-#include <iterator>
-
-#include <algorithm>
-
 class Book {
     friend class BookStore;
 
     friend std::ostream& operator<<(std::ostream& os, const Book& b);
-    friend std::istream& operator>>(std::istream& is, Book& b);
 
 public:
-    Book() = default;
-
     Book(const std::string& ISBN,
          const std::string& author,
          const double price,
@@ -28,7 +18,10 @@ public:
     {
     }
 
-    std::string& get_isbn();
+    const std::string& get_isbn() const;
+    const std::string& get_author() const;
+    double get_price() const;
+    double get_pages() const;
 
 private:
     std::string ISBN;
@@ -40,6 +33,3 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const Book& b);
-std::istream& operator>>(std::istream& is, Book& b);
-
-#endif // __BOOK_H__

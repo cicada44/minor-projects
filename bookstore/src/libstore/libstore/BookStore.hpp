@@ -1,5 +1,6 @@
-#ifndef __BOOKSTORE_H__
-#define __BOOKSTORE_H__
+#pragma once
+
+#include <libbook/Book.hpp>
 
 #include <iostream>
 
@@ -9,7 +10,9 @@
 
 #include <iterator>
 
-#include <libbook/Book.hpp>
+#include <optional>
+
+#include <numeric>
 
 #include <algorithm>
 
@@ -21,18 +24,12 @@ private:
 };
 
 class BookStore : public Store {
-    friend void
-    interactive_mode(std::ostream& os, std::istream& is, BookStore& store);
-
     friend std::ostream& operator<<(std::ostream& os, const BookStore& b);
-    friend std::istream& operator>>(std::istream& is, BookStore& b);
 
 public:
-    BookStore() = default;
-
-    BookStore(const std::vector<Book>& books) : books(books)
+    BookStore(const std::vector<Book>& books_) : books(books_)
     {
-        for (const auto& c : books) {
+        for (const auto& c : books_) {
             revenue += c.price;
         }
     }
@@ -42,8 +39,9 @@ public:
     void add_book(const Book& book);
     bool remove_book(const std::string& ISBN_to_delete);
 
-    bool check_book(const std::string& isbn_to_find);
-    Book find_book(const std::string& isbn_to_find);
+    bool contains_book(const std::string& isbn_to_find) const;
+
+    std::optional<Book> find_book(const std::string& isbn_to_find) const;
 
 private:
     double revenue;
@@ -52,8 +50,3 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const BookStore& b);
-std::istream& operator>>(std::istream& is, BookStore& b);
-
-void interactive_mode(std::ostream& os, std::istream& is, BookStore& store);
-
-#endif // __BOOKSTORE_H__

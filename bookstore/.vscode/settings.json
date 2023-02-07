@@ -49,6 +49,8 @@
         "iomanip": "cpp",
         "ctime": "cpp",
         "list": "cpp",
-        "sstream": "cpp"
-    }
+        "sstream": "cpp",
+        "optional": "cpp"
+    },
+    "cmake.configureOnOpen": true
 }
