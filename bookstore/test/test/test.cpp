@@ -90,6 +90,12 @@ TEST(BookStore, Finders)
         ASSERT_THROW(bs.find_book("2").value(), std::bad_optional_access);
         ASSERT_THROW(bs.find_book("3").value(), std::bad_optional_access);
     }
+
+    // get_author_book
+    {
+        ASSERT_EQ(bs.get_author_books("A").size(), 3);
+        ASSERT_EQ(bs.get_author_books("G").size(), 1);
+    }
 }
 
 TEST(BookStore, Modifiers)
@@ -110,8 +116,17 @@ TEST(BookStore, Modifiers)
 
     // Add book
     {
-        // bs.add_book(Book{"5-5-5", "A", 21, 130});
-        // bs.add_book(Book{"6-6-6", "A", 21, 130});
+        bs.add_book(Book{"5-5-5", "A", 21, 130});
+        ASSERT_EQ(bs.count(), 11);
+        bs.add_book(Book{"6-6-6", "A", 21, 130});
+        ASSERT_EQ(bs.count(), 12);
+    }
+
+    // remove_book
+    {
+        ASSERT_EQ(bs.remove_book("1-1-1"), true);
+        ASSERT_EQ(bs.contains("1-1-1"), false);
+        ASSERT_EQ(bs.remove_book("1-1-1"), false);
     }
 }
 

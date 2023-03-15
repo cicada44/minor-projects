@@ -18,6 +18,7 @@ public:
 private:
 };
 
+/* Each book in bookstore is unique and immutable. */
 class BookStore : public Store {
     friend std::ostream& operator<<(std::ostream& os, const BookStore& b);
 
@@ -26,7 +27,9 @@ public:
 
     /* Accessors */
     virtual double get_revenue() const override;
+    size_t count() const;
     double avg_price() const;
+
     const std::string most_frequent_author() const;
     size_t max_pages() const;
     const Book max_pages_book() const;
@@ -39,6 +42,7 @@ public:
     /* Finders */
     bool contains(const std::string& ISBN) const;
     std::optional<Book> find_book(const std::string& ISBN) const;
+    std::vector<Book> get_author_books(const std::string& auth);
 
 private:
     double revenue;

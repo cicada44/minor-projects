@@ -27,9 +27,15 @@ BookStore::BookStore(const std::initializer_list<Book>& il)
 }
 
 /* Returns revenue. */
-inline double BookStore::get_revenue() const
+double BookStore::get_revenue() const
 {
     return revenue;
+}
+
+/* Returns number of containing books. */
+size_t BookStore::count() const
+{
+    return books.size();
 }
 
 /* If book.ISBN is unique -- add book to the and of the list of books.
@@ -149,6 +155,22 @@ const Book BookStore::max_pages_book() const
     });
 
     return max_pgs_book;
+}
+
+/* Returns vector of books with author auth. If there isn't any books from such
+ * author returns empty vector. */
+std::vector<Book> BookStore::get_author_books(const std::string& auth)
+{
+    std::vector<Book> author_b;
+
+    std::for_each(
+            books.begin(), books.end(), [&author_b, &auth](const Book& b) {
+                if (b.get_author() == auth) {
+                    author_b.push_back(b);
+                }
+            });
+
+    return author_b;
 }
 
 /* Prints all books in the list to os. */
