@@ -3,14 +3,13 @@
 #include <libbook/Book.hpp>
 
 #include <algorithm>
+#include <iterator>
 #include <numeric>
 #include <optional>
-
-#include <iterator>
+#include <string>
 #include <vector>
 
 #include <iostream>
-#include <string>
 
 class Store {
 public:
@@ -25,26 +24,21 @@ class BookStore : public Store {
 public:
     BookStore(const std::initializer_list<Book>& books_);
 
+    /* Accessors */
     virtual double get_revenue() const override;
+    double avg_price() const;
+    const std::string most_frequent_author() const;
+    size_t max_pages() const;
+    const Book max_pages_book() const;
+    const Book& operator[](const size_t ind) const noexcept;
 
-    /* If book.ISBN is unique of actual books list - insert to the end of the
-     * actual list of books. */
-    inline void add_book(const Book& book);
-
+    /* Modifiers */
+    void add_book(const Book& book);
     bool remove_book(const std::string& ISBN);
 
-    bool contains_book(const std::string& ISBN) const;
-
+    /* Finders */
+    bool contains(const std::string& ISBN) const;
     std::optional<Book> find_book(const std::string& ISBN) const;
-
-    inline bool contains(const std::string& ISBN) const;
-
-    inline const Book& operator[](const size_t ind) const noexcept;
-
-    const std::string most_frequent_author() const;
-    size_t max_pages_book() const;
-
-    double avg_price() const;
 
 private:
     double revenue;
