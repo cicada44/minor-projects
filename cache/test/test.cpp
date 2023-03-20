@@ -1,8 +1,12 @@
-#include <cache.hpp>
+#include "../src/cache/cache.hpp"
 
 #include <iostream>
 
 #include <gtest/gtest.h>
+
+TEST(Cache, Q2Cache)
+{
+}
 
 int main(int argc, char** argv)
 {

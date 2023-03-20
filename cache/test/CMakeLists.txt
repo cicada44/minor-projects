@@ -10,7 +10,6 @@ add_executable(
 target_link_libraries(
   test
   GTest::gtest_main
-  cache
 )
 
 target_include_directories(
