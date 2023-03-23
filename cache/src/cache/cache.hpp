@@ -48,9 +48,19 @@ struct cache_t {
         auto hit = hot_hash_.find(key);
 
         if (hit == hot_hash_.end()) {
-            ;
+            if (full_hot()) {
+                hot_hash_.erase(hot_cache_.back().first);
+                hot_cache_.pop_back();
+            }
+            hot_cache_.emplace_front(key, slow_get_page(key));
+            hot_hash_.emplace(key, hot_cache_.begin());
+            return false;
         }
 
+        auto eltit = hit->second;
+        if (eltit != hot_cache_.begin())
+            hot_cache_.splice(
+                    hot_cache_.begin(), hot_cache_, eltit, std::next(eltit));
         return true;
     }
 
@@ -77,17 +87,16 @@ struct cache_t {
     template <typename F>
     bool lookup_update(KeyT key, F slow_get_page)
     {
-        auto hit = in_hash_.find(key);
-
-        if (hit == in_hash_.end()) {
+        auto hit_in = in_hash_.find(key);
+        if (hit_in == in_hash_.end()) {
             bool hitted = false;
             if (full_in()) {
-                // std::cout << "Full in - " << full_in() << '\n';
                 hitted = lookup_update_out(key, slow_get_page);
                 if (hitted == false) {
                     in_hash_.erase(in_cache_.back().first);
                     in_cache_.pop_back();
                 } else {
+                    lookup_update_hot(key, slow_get_page);
                     return hitted;
                 }
             }

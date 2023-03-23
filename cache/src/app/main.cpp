@@ -33,26 +33,29 @@ int ret(int key)
 
 int main()
 {
-    caches::cache_t<int> cache(5);
+    caches::cache_t<int> cache(10);
 
     for (int x = 0; x != 10; ++x) {
-        // std::cout << "Pushing " << x << "...";
-        // print_cache(cache);
-        // std::cout << "Result - " << cache.lookup_update(x, ret) << '\n';
-        // print_cache(cache);
-        // sleep(1);
         cache.lookup_update(x, ret);
     }
 
     print_cache(cache);
 
-    for (int x = 0; x != 10; ++x) {
+    for (int x = 15; x != 20; ++x) {
         std::cout << "Pushing " << x << "...";
         std::cout << "Result - " << cache.lookup_update(x, ret) << '\n';
         print_cache(cache);
         sleep(1);
-        // cache.lookup_update(x, ret);
+        cache.lookup_update(x, ret);
     }
 
-    print_cache(cache);
+    for (int x = 0; x != 5; ++x) {
+        std::cout << "Pushing " << x << "...";
+        std::cout << "Result - " << cache.lookup_update(x, ret) << '\n';
+        print_cache(cache);
+        sleep(1);
+        cache.lookup_update(x, ret);
+    }
+
+    // print_cache(cache);
 }
