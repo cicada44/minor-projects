@@ -23,8 +23,13 @@ struct cache_t {
     std::list<std::pair<KeyT, T>> hot_cache_;
     std::unordered_map<KeyT, ListIt> hot_hash_;
 
-    cache_t(const size_t sz) : in_sz_(sz), out_sz_(sz * 2), hot_sz_(sz)
+    cache_t(const size_t sz) : in_sz_(sz), out_sz_(sz * 5), hot_sz_(sz / 5)
     {
+    }
+
+    size_t size() const
+    {
+        return in_sz_;
     }
 
     bool full_in() const
