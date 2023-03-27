@@ -23,8 +23,9 @@ struct cache_t {
     std::list<std::pair<KeyT, T>> hot_cache_;
     std::unordered_map<KeyT, ListIt> hot_hash_;
 
-    cache_t(const size_t sz) : in_sz_(sz), out_sz_(sz * 5), hot_sz_(sz / 5)
+    cache_t(const size_t sz) : in_sz_(sz), out_sz_(sz * 5)
     {
+        (sz != 0 && sz < 5) ? hot_sz_ = 1 : hot_sz_ = sz / 5;
     }
 
     size_t size() const
@@ -92,6 +93,10 @@ struct cache_t {
     template <typename F>
     bool lookup_update(KeyT key, F slow_get_page)
     {
+        if (in_sz_ == 0) {
+            return 0;
+        }
+
         auto hit_in = in_hash_.find(key);
         if (hit_in == in_hash_.end()) {
             bool hitted = false;
