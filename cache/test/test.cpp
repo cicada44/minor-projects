@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <iostream>
 
 #include <unistd.h>
@@ -193,6 +194,74 @@ TEST(Cache, Cache2Q_4)
     cnter = 3;
     for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
         ASSERT_EQ(i->first, cnter--);
+    }
+}
+
+TEST(Cache, Cache2Q_5)
+{
+    caches::cache_t<int> cache(5);
+
+    ASSERT_EQ(cache.in_cache_.empty(), true);
+    ASSERT_EQ(cache.out_cache_.empty(), true);
+    ASSERT_EQ(cache.hot_cache_.empty(), true);
+
+    ASSERT_EQ(cache.in_sz_, 5);
+    ASSERT_EQ(cache.out_sz_, 25);
+    ASSERT_EQ(cache.hot_sz_, 1);
+
+    for (int i = 1; i != 31; ++i) {
+        ASSERT_EQ(cache.lookup_update(i, retSame), false);
+    }
+
+    int cnter = 25;
+    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
+        ASSERT_EQ(i->first, cnter--);
+    }
+
+    cnter = 30;
+    for (auto i = cache.in_cache_.begin(); i != cache.in_cache_.end(); ++i) {
+        ASSERT_EQ(i->first, cnter--);
+    }
+
+    for (int i = 1; i != 26; ++i) {
+        ASSERT_EQ(cache.lookup_update(i, retSame), true);
+        ASSERT_EQ(cache.hot_cache_.begin()->first, i);
+        ASSERT_EQ(cache.hot_cache_.size(), 1);
+    }
+}
+
+TEST(Cache, Cache2Q_6)
+{
+    caches::cache_t<int> cache(10);
+
+    ASSERT_EQ(cache.in_cache_.empty(), true);
+    ASSERT_EQ(cache.out_cache_.empty(), true);
+    ASSERT_EQ(cache.hot_cache_.empty(), true);
+
+    ASSERT_EQ(cache.in_sz_, 10);
+    ASSERT_EQ(cache.out_sz_, 50);
+    ASSERT_EQ(cache.hot_sz_, 2);
+
+    for (int i = 1; i != 61; ++i) {
+        ASSERT_EQ(cache.lookup_update(i, retSame), false);
+    }
+
+    int cnter = 50;
+    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
+        ASSERT_EQ(i->first, cnter--);
+    }
+
+    cnter = 60;
+    for (auto i = cache.in_cache_.begin(); i != cache.in_cache_.end(); ++i) {
+        ASSERT_EQ(i->first, cnter--);
+    }
+
+    for (int i = 1; i != 51; ++i) {
+        ASSERT_EQ(cache.lookup_update(i, retSame), true);
+        ASSERT_EQ(cache.hot_cache_.begin()->first, i);
+        if (i > 1) {
+            ASSERT_EQ(std::next(cache.hot_cache_.begin())->first, i - 1);
+        }
     }
 }
 
