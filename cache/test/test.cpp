@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include <fstream>
+
 #include <unistd.h>
 
 int retSame(int key)
@@ -16,20 +18,22 @@ void print_2q(const caches::cache_t<int>& c)
 {
     std::cout << "IN\n";
     for (auto i = c.in_cache_.begin(); i != c.in_cache_.end(); ++i) {
-        std::cout << i->first << '\n';
+        std::cout << i->first << ' ';
     }
     std::cout << '\n';
     std::cout << "OUT\n";
     for (auto i = c.out_cache_.begin(); i != c.out_cache_.end(); ++i) {
-        std::cout << i->first << '\n';
+        std::cout << i->first << ' ';
     }
     std::cout << '\n';
     std::cout << "HOT\n";
     for (auto i = c.hot_cache_.begin(); i != c.hot_cache_.end(); ++i) {
-        std::cout << i->first << '\n';
+        std::cout << i->first << ' ';
     }
     std::cout << '\n';
 }
+
+/*
 
 TEST(Cache, Cache2Q_0)
 {
@@ -262,6 +266,79 @@ TEST(Cache, Cache2Q_6)
         if (i > 1) {
             ASSERT_EQ(std::next(cache.hot_cache_.begin())->first, i - 1);
         }
+    }
+}
+
+*/
+
+void generate()
+{
+    std::string filename
+            = "/home/cicada44/cicada-main/edu/minor-projects/cache/test/"
+              "dats/";
+    std::string postfix = ".txt";
+    srand(time(nullptr));
+
+    size_t num_of_tests = rand() % 100;
+
+    for (int j = 0; j != 100; ++j) {
+        std::fstream ofs(
+                filename + std::to_string(j) + postfix, std::ios_base::app);
+        std::ostream_iterator<int> os_iter(ofs, "\n");
+        *os_iter = 10 + rand() % 10;
+        size_t size = rand() % 100;
+        *os_iter = size;
+        for (size_t i = 0; i != size; ++i) {
+            *os_iter = rand() % 100;
+        }
+    }
+}
+
+/* Returns number of hits. */
+size_t run_test(std::istream& is, std::ostream& os)
+{
+    size_t cache_size;
+    is >> cache_size;
+
+    caches::cache_t<int> cache(cache_size);
+
+    size_t num_elements;
+    is >> num_elements;
+
+    size_t num_hits = 0;
+
+    int tmp_element = 0;
+    for (size_t i = 0; i != num_elements; ++i) {
+        is >> tmp_element;
+
+        size_t hit = cache.lookup_update(tmp_element, retSame);
+        num_hits += hit;
+
+        // num_hits += cache.lookup_update(tmp_element, retSame);
+        print_2q(cache);
+        std::cout << "HITS: " << num_hits << '\n';
+        if (hit == true) {
+            std::cout << "Hit of" << tmp_element << '\n';
+            sleep(3);
+        }
+        sleep(1);
+        system("clear");
+    }
+
+    return num_hits;
+}
+
+TEST(Cache2Q, Test)
+{
+    for (int j = 0; j != 100; ++j) {
+        std::fstream ifs(
+                std::string("/home/cicada44/cicada-main/edu/minor-projects/"
+                            "cache/test/"
+                            "dats/")
+                + std::to_string(j) + std::string(".txt"));
+        run_test(ifs, std::cout);
+        // std::cout << '[' << j << ']' << " Hits: " << run_test(ifs, std::cout)
+        //   << '\n';
     }
 }
 

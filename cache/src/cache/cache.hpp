@@ -23,9 +23,8 @@ struct cache_t {
     std::list<std::pair<KeyT, T>> hot_cache_;
     std::unordered_map<KeyT, ListIt> hot_hash_;
 
-    cache_t(const size_t sz) : in_sz_(sz), out_sz_(sz * 5)
+    cache_t(const size_t sz) : in_sz_(sz), out_sz_(sz), hot_sz_(sz)
     {
-        (sz != 0 && sz < 5) ? hot_sz_ = 1 : hot_sz_ = sz / 5;
     }
 
     size_t size() const
