@@ -15,7 +15,7 @@ int main()
     std::cin >> size >> elCnt;
     assert(std::cin.good());
 
-    caches::cache_t<int> cache(size);
+    caches::idealCache<int> cache(size);
 
     int insertable;
     size_t hits = 0;

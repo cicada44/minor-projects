@@ -7,8 +7,6 @@
 
 #include <fstream>
 
-#include <unistd.h>
-
 int retSame(int key)
 {
     return key;
@@ -33,15 +31,13 @@ void print_2q(const caches::cache_t<int>& c)
     std::cout << '\n';
 }
 
-/*
-
 TEST(Cache, Cache2Q_0)
 {
     caches::cache_t<int> cache(10);
 
     ASSERT_EQ(cache.in_sz_, 10);
-    ASSERT_EQ(cache.out_sz_, 50);
-    ASSERT_EQ(cache.hot_sz_, 2);
+    ASSERT_EQ(cache.out_sz_, 10);
+    ASSERT_EQ(cache.hot_sz_, 10);
 
     ASSERT_EQ(cache.full_in(), false);
     ASSERT_EQ(cache.full_out(), false);
@@ -68,8 +64,8 @@ TEST(Cache, Cache2Q_1)
     caches::cache_t<int> cache(5);
 
     ASSERT_EQ(cache.in_sz_, 5);
-    ASSERT_EQ(cache.out_sz_, 25);
-    ASSERT_EQ(cache.hot_sz_, 1);
+    ASSERT_EQ(cache.out_sz_, 5);
+    ASSERT_EQ(cache.hot_sz_, 5);
 
     ASSERT_EQ(cache.full_in(), false);
     ASSERT_EQ(cache.full_out(), false);
@@ -120,180 +116,6 @@ TEST(Cache, Cache2Q_2)
     ASSERT_EQ(cache.hot_cache_.empty(), true);
 }
 
-TEST(Cache, Cache2Q_3)
-{
-    caches::cache_t<int> cache(5);
-
-    ASSERT_EQ(cache.in_cache_.empty(), true);
-    ASSERT_EQ(cache.out_cache_.empty(), true);
-    ASSERT_EQ(cache.hot_cache_.empty(), true);
-
-    ASSERT_EQ(cache.in_sz_, 5);
-    ASSERT_EQ(cache.out_sz_, 25);
-    ASSERT_EQ(cache.hot_sz_, 1);
-
-    for (int i = 0; i != 15; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), false);
-    }
-
-    int cnter = 14;
-    for (auto i = cache.in_cache_.begin(); i != cache.in_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    for (int i = 0; i != 25; ++i) {
-        if (i < 15) {
-            ASSERT_EQ(cache.lookup_update(i, retSame), true);
-        } else {
-            ASSERT_EQ(cache.lookup_update(i, retSame), false);
-        }
-        if (i < 10) {
-            ASSERT_EQ(cache.hot_cache_.begin()->first, i);
-        }
-    }
-
-    cnter = 24;
-    for (auto i = cache.in_cache_.begin(); i != cache.in_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    cnter = 19;
-    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-}
-
-TEST(Cache, Cache2Q_4)
-{
-    caches::cache_t<int> cache(1);
-
-    ASSERT_EQ(cache.in_cache_.empty(), true);
-    ASSERT_EQ(cache.out_cache_.empty(), true);
-    ASSERT_EQ(cache.hot_cache_.empty(), true);
-
-    ASSERT_EQ(cache.in_sz_, 1);
-    ASSERT_EQ(cache.out_sz_, 5);
-    ASSERT_EQ(cache.hot_sz_, 1);
-
-    for (int i = 0; i != 5; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), false);
-    }
-
-    ASSERT_EQ(cache.in_cache_.begin()->first, 4);
-
-    int cnter = 3;
-    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    for (int i = 0; i != 5; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), true);
-    }
-
-    ASSERT_EQ(cache.hot_cache_.begin()->first, 3);
-    ASSERT_EQ(cache.in_cache_.begin()->first, 4);
-    cnter = 3;
-    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-}
-
-TEST(Cache, Cache2Q_5)
-{
-    caches::cache_t<int> cache(5);
-
-    ASSERT_EQ(cache.in_cache_.empty(), true);
-    ASSERT_EQ(cache.out_cache_.empty(), true);
-    ASSERT_EQ(cache.hot_cache_.empty(), true);
-
-    ASSERT_EQ(cache.in_sz_, 5);
-    ASSERT_EQ(cache.out_sz_, 25);
-    ASSERT_EQ(cache.hot_sz_, 1);
-
-    for (int i = 1; i != 31; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), false);
-    }
-
-    int cnter = 25;
-    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    cnter = 30;
-    for (auto i = cache.in_cache_.begin(); i != cache.in_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    for (int i = 1; i != 26; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), true);
-        ASSERT_EQ(cache.hot_cache_.begin()->first, i);
-        ASSERT_EQ(cache.hot_cache_.size(), 1);
-    }
-}
-
-TEST(Cache, Cache2Q_6)
-{
-    caches::cache_t<int> cache(10);
-
-    ASSERT_EQ(cache.in_cache_.empty(), true);
-    ASSERT_EQ(cache.out_cache_.empty(), true);
-    ASSERT_EQ(cache.hot_cache_.empty(), true);
-
-    ASSERT_EQ(cache.in_sz_, 10);
-    ASSERT_EQ(cache.out_sz_, 50);
-    ASSERT_EQ(cache.hot_sz_, 2);
-
-    for (int i = 1; i != 61; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), false);
-    }
-
-    int cnter = 50;
-    for (auto i = cache.out_cache_.begin(); i != cache.out_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    cnter = 60;
-    for (auto i = cache.in_cache_.begin(); i != cache.in_cache_.end(); ++i) {
-        ASSERT_EQ(i->first, cnter--);
-    }
-
-    for (int i = 1; i != 51; ++i) {
-        ASSERT_EQ(cache.lookup_update(i, retSame), true);
-        ASSERT_EQ(cache.hot_cache_.begin()->first, i);
-        if (i > 1) {
-            ASSERT_EQ(std::next(cache.hot_cache_.begin())->first, i - 1);
-        }
-    }
-}
-
-*/
-
-void generate()
-{
-    std::string filename
-            = "/home/cicada44/cicada-main/edu/minor-projects/cache/test/"
-              "dats/";
-    std::string postfix = ".txt";
-    srand(time(nullptr));
-
-    size_t num_of_tests = rand() % 100;
-
-    for (int j = 0; j != 100; ++j) {
-        std::fstream ofs(
-                filename + std::to_string(j) + postfix, std::ios_base::app);
-        std::ostream_iterator<int> os_iter(ofs, "\n");
-        *os_iter = 10 + rand() % 10;
-        size_t size = rand() % 100;
-        *os_iter = size;
-        for (size_t i = 0; i != size; ++i) {
-            *os_iter = rand() % 100;
-        }
-    }
-}
-
 /* Returns number of hits. */
 size_t run_test(std::istream& is, std::ostream& os)
 {
@@ -310,35 +132,35 @@ size_t run_test(std::istream& is, std::ostream& os)
     int tmp_element = 0;
     for (size_t i = 0; i != num_elements; ++i) {
         is >> tmp_element;
-
-        size_t hit = cache.lookup_update(tmp_element, retSame);
-        num_hits += hit;
-
-        // num_hits += cache.lookup_update(tmp_element, retSame);
-        print_2q(cache);
-        std::cout << "HITS: " << num_hits << '\n';
-        if (hit == true) {
-            std::cout << "Hit of" << tmp_element << '\n';
-            sleep(3);
-        }
-        sleep(1);
-        system("clear");
+        num_hits += cache.lookup_update(tmp_element, retSame);
     }
 
     return num_hits;
 }
 
-TEST(Cache2Q, Test)
+TEST(Cache2Q, CountOfHitTest)
 {
+    std::vector<int> expectedNHits{
+            24, 6,  12, 11, 20, 9,  24, 16, 3,  1,  19, 29, 7,  18, 0,  2,  19,
+            17, 14, 10, 10, 18, 12, 21, 14, 7,  15, 2,  17, 6,  2,  4,  12, 11,
+            6,  11, 17, 16, 2,  13, 10, 0,  10, 5,  7,  5,  26, 10, 17, 0,  8,
+            11, 3,  15, 17, 18, 10, 3,  2,  7,  10, 3,  11, 10, 7,  26, 10, 0,
+            22, 4,  0,  7,  14, 25, 16, 9,  23, 0,  2,  0,  12, 5,  2,  15, 3,
+            18, 0,  7,  2,  1,  26, 4,  17, 0,  4,  20, 11, 0,  0,  10};
+
+    auto start = expectedNHits.begin();
     for (int j = 0; j != 100; ++j) {
-        std::fstream ifs(
-                std::string("/home/cicada44/cicada-main/edu/minor-projects/"
-                            "cache/test/"
-                            "dats/")
-                + std::to_string(j) + std::string(".txt"));
-        run_test(ifs, std::cout);
-        // std::cout << '[' << j << ']' << " Hits: " << run_test(ifs, std::cout)
-        //   << '\n';
+        std::fstream ifs;
+        
+#if defined(__linux__)
+        ifs.open(std::string("../../../test/dats/") + std::to_string(j) + std::string(".txt"));
+
+#elif _WIN32
+        ifs.open(std::string("..\\..\\..\\test\\dats\\") + std::to_string(j) + std::string(".txt"));
+
+        ASSERT_EQ(run_test(ifs, std::cout), *start++);
+#endif
+
     }
 }
 

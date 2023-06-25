@@ -91,9 +91,9 @@ BookStore::get_pos(const std::string& ISBN) const
 }
 
 /* Returns constant reference to book containing on index ind. */
-const Book& BookStore::operator[](const size_t ind) const noexcept
+const Book& BookStore::operator[](const size_t idx) const noexcept
 {
-    return books[ind];
+    return books[idx];
 }
 
 /* Returns most frequent author of the actual list of books (author with
