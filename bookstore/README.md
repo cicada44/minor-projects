@@ -9,16 +9,15 @@ Bookstore is a C++ project that represents a simple bookstore management system.
 
 ## Usage
 
-To compile the [main](./src/app/app/main.cpp) file, execute the following command:
+To compile and all files, execute the following command:
 
      cmake --preset release
      cmake --build --preset release
-     ./build/release/bin/app
 
 To run the [tests](./test/test/test.cpp), execute the following command:
 
-     cmake --preset release
-     cmake --build --preset release
      ./build/release/bin/test
 
+To run the [main](./src/app/app/main.cpp), execute the following command:
 
+     ./build/release/bin/app
