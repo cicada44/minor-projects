@@ -1,0 +1,11 @@
+# ninja log v5
+1	1908	1688196297778176872	test/test/CMakeFiles/test.dir/test.cpp.o	c635df9c814b0d64
+0	513	1688196296382130697	src/app/CMakeFiles/app.dir/app/main.cpp.o	6c66f121ed256541
+354	410	1688196296278127248	src/libbook/libbook.a	bd036dcf0da854fd
+1	354	1688196296222125391	src/libbook/CMakeFiles/book.dir/libbook/Book.cpp.o	65f0c453c08e8648
+1	283	1688196465361867937	src/libbook/CMakeFiles/book.dir/libbook/Book.cpp.o	65f0c453c08e8648
+283	319	1688196465397868413	src/libbook/libbook.a	bd036dcf0da854fd
+0	801	1688196465881874812	src/libstore/CMakeFiles/store.dir/libstore/BookStore.cpp.o	f3e59c8d941113ca
+801	835	1688196465913875235	src/libstore/libstore.a	f47a7aade002f2d7
+835	917	1688196465997876346	bin/app	b4bc8ee95be41ca7
+836	935	1688196466013876556	bin/test	75fba2ce7e84a1b

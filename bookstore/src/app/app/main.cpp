@@ -1,9 +1,6 @@
 #include <libstore/BookStore.hpp>
 
+#include <iostream>
 #include <vector>
 
-#include <iostream>
-
-int main()
-{
-}
+int main() {}

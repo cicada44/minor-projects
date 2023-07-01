@@ -48,3 +48,6 @@ _deps
 ### CMake Patch ###
 # External projects
 *-prefix/
+
+.clang-format
+.gitkeep

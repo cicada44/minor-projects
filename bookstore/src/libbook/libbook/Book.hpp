@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------------
+//
+// Header for class 'Book' in C++
+//
+// -----------------------------------------------------------------------------
+
 #pragma once
 
 #include <string>
@@ -8,16 +14,13 @@ class Book {
     friend class BookStore;
 
     friend std::ostream& operator<<(std::ostream& os, const Book& b);
+
     friend bool ISBN_cmp(const Book& b1, const Book& b2);
 
-public:
-    Book(const std::string& ISBN,
-         const std::string& author,
-         const double price,
+   public:
+    Book(const std::string& ISBN, const std::string& author, const double price,
          const size_t pages)
-        : ISBN(ISBN), author(author), price(price), pages(pages)
-    {
-    }
+        : ISBN(ISBN), author(author), price(price), pages(pages) {}
 
     /* Returns ISBN of book. */
     const std::string& get_isbn() const;
@@ -31,7 +34,7 @@ public:
     /* Returns number of pages of book.  */
     double get_pages() const;
 
-private:
+   private:
     std::string ISBN;
     std::string author;
 
