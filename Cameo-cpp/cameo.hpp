@@ -21,7 +21,7 @@ public:
 
     void destroyWindow();
 
-    void processEvent();
+    int getProcessEvent();
 
 private:
     int _keypressCallback;
@@ -31,7 +31,8 @@ private:
 
 class CaptureManager {
 public:
-    CaptureManager(cv::VideoCapture& cam, WindowManager& winManager, const bool shouldMirrored = false);
+    CaptureManager(cv::VideoCapture& cam, WindowManager& winManager,
+                   const bool shouldMirrored = false);
 
     int get_channel() const;
 

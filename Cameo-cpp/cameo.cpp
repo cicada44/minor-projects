@@ -28,12 +28,15 @@ void Cameo::WindowManager::destroyWindow() {
     _isWindowCreated = false;
 }
 
-void Cameo::WindowManager::processEvent() {
+int Cameo::WindowManager::getProcessEvent() {
     int keycode = cv::waitKey(1);
-    if (_keypressCallback != -1 && keycode != -1) {
-        keycode = 0xff;
-        _keypressCallback = keycode;
-    }
+    // if (keycode != -1) {
+    //     keycode = 0xff;
+    // }
+
+    std::cout << keycode << '\n';
+
+    return keycode;
 }
 
 Cameo::CaptureManager::CaptureManager(cv::VideoCapture& cam,
@@ -55,13 +58,13 @@ void Cameo::CaptureManager::set_channel(const int new_channel) {
 }
 
 cv::Mat Cameo::CaptureManager::frame() {
-    if (_enteredFrame == false && _frame.empty() == true) {
+    if (_enteredFrame == true) {
         if (_camera.retrieve(_frame) == false) {
-            std::cerr << "Can't detect camera!" << '\n';
             exit(-1);
         }
-        std::cout << "smt wrong with frame\n";
     }
+
+    std::cout << "Size of retrieved frame - " << _frame.size() << '\n';
 
     return _frame;
 }
@@ -75,7 +78,6 @@ bool Cameo::CaptureManager::isWritingVideo() const {
 }
 
 void Cameo::CaptureManager::enterFrame() {
-    // CV_Assert(_enteredFrame == false);
     if (_camera.isOpened()) _enteredFrame = _camera.grab();
 }
 
@@ -88,12 +90,11 @@ void Cameo::CaptureManager::exitFrame() {
         } else {
             std::time_t timeElapsed =
                 std::difftime(std::time(nullptr), _startTime);
-            _fpsEstimate = _framesElapled / timeElapsed;
+            // _fpsEstimate = _framesElapled / timeElapsed;
         }
         ++_framesElapled;
 
-        if (_winManager.isWindowCreated() != false) {
-            std::cerr << "window created!\n";
+        if (_winManager.isWindowCreated()) {
             if (_shouldMirrored) {
                 cv::Mat mirroredFrame;
                 cv::flip(_frame, mirroredFrame, 1);
@@ -101,8 +102,6 @@ void Cameo::CaptureManager::exitFrame() {
             } else {
                 _winManager.show(_frame);
             }
-        } else {
-            std::cerr << "window hasn't created\n";
         }
 
         if (isWritingImage()) {
@@ -156,11 +155,9 @@ void Cameo::Cameo::run() {
     _windowManager.createWindow();
     while (_windowManager.isWindowCreated()) {
         _captureManager.enterFrame();
-        std::cout << "Frame ezntered\n";
         cv::Mat frame = _captureManager.frame();
-        std::cout << frame.empty() << '\n';
         _captureManager.exitFrame();
-        _windowManager.processEvent();
+        onKeypress(_windowManager.getProcessEvent());
     }
 }
 
