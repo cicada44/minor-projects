@@ -1,4 +1,3 @@
-
 #include <cameo.hpp>
 
 #include <ctime>
@@ -7,9 +6,8 @@
 
 #include <iostream>
 
-Cameo::WindowManager::WindowManager(const std::string& windowName,
-                                    const int keypressCallback)
-    : _keypressCallback(keypressCallback), _windowName(windowName) {}
+Cameo::WindowManager::WindowManager(const std::string& windowName)
+    : _windowName(windowName) {}
 
 bool Cameo::WindowManager::isWindowCreated() const { return _isWindowCreated; }
 
@@ -28,21 +26,18 @@ void Cameo::WindowManager::destroyWindow() {
     _isWindowCreated = false;
 }
 
-int Cameo::WindowManager::getProcessEvent() {
-    int keycode = cv::waitKey(1);
-    // if (keycode != -1) {
-    //     keycode = 0xff;
-    // }
-
-    std::cout << keycode << '\n';
-
-    return keycode;
-}
+int Cameo::WindowManager::getProcessEvent() { return cv::waitKey(1); }
 
 Cameo::CaptureManager::CaptureManager(cv::VideoCapture& cam,
                                       WindowManager& winManager,
                                       const bool shouldMirrored)
     : _winManager(winManager), _camera(cam), _shouldMirrored(shouldMirrored) {}
+
+void Cameo::CaptureManager::set_mirrored(const bool shMirrored) {
+    _shouldMirrored = shMirrored;
+}
+
+bool Cameo::CaptureManager::get_mirrored() const { return _shouldMirrored; }
 
 int Cameo::CaptureManager::get_channel() const { return _channel; }
 
@@ -63,8 +58,6 @@ cv::Mat Cameo::CaptureManager::frame() {
             exit(-1);
         }
     }
-
-    std::cout << "Size of retrieved frame - " << _frame.size() << '\n';
 
     return _frame;
 }
@@ -90,7 +83,7 @@ void Cameo::CaptureManager::exitFrame() {
         } else {
             std::time_t timeElapsed =
                 std::difftime(std::time(nullptr), _startTime);
-            // _fpsEstimate = _framesElapled / timeElapsed;
+            if (timeElapsed != 0) _fpsEstimate = _framesElapled / timeElapsed;
         }
         ++_framesElapled;
 
@@ -163,19 +156,25 @@ void Cameo::Cameo::run() {
 
 void Cameo::Cameo::onKeypress(int keycode) {
     switch (keycode) {
-        case 32:
+        case 32: /* Space. */
             _captureManager.writeImage("screenshot.png");
             break;
 
-        case 9:
+        case 9: /* Tab. */
             if (!_captureManager.isWritingVideo())
                 _captureManager.startWritingVideo("screenvideo.avi");
             else
                 _captureManager.stopWritingVideo();
             break;
 
-        case 27:
+        case 27: /* Escape. */
             _windowManager.destroyWindow();
+            break;
+
+        case 109: /* 'm' key. */
+            (_captureManager.get_mirrored() == true)
+                ? _captureManager.set_mirrored(false)
+                : _captureManager.set_mirrored(true);
             break;
 
         default:
