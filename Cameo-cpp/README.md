@@ -14,7 +14,7 @@ To compile and execute the application, use the following Makefile rule:
 Cameo is an application for controlling and showing camera frames while also providing event controls. The following events can be triggered:
 
 - **ESC**: Close the window.
-- **'m'**: Set/unset frames to mirrored state.
 - **TAB**: Start/stop writing video.
 - **Space**: Write image.
+- **'m'**: Set/unset frames to mirrored state.
 
