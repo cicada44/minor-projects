@@ -8,6 +8,10 @@ A simple project for managing a bookstore. It provides functionalities to view a
 
 An implementation of the 2Q cache algorithm in C++. The 2Q cache efficiently handles frequently and recently accessed items.
 
+## [Smart Pointers](./smart-pointers/)
+
+A simple implementation of `std::shared_ptr` and `std::unique_ptr` in C++.
+
 ## [Cameo (py)](./Cameo-py/)
 
 A simple project of camera frames processing on Python3.

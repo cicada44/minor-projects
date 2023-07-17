@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# CaptureManager and WindowManages classes in Python3
+# CaptureManager and WindowManager classes
 #
 # -----------------------------------------------------------------------------
 
