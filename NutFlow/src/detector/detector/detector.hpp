@@ -7,15 +7,15 @@
 
 namespace nf {
 
-using pointMat = std::vector<std::vector<cv::Point>>;
-using pairContHier = std::pair<std::vector<cv::Vec4i>, pointMat>;
+using Contour = std::vector<cv::Point>;
+using pointMat = std::vector<Contour>;
 
 #define RATIO_BL_START 0.65
 #define RATIO_BL_END 0.75
 
 #define NUT_NONE_ID -1
 
-#define OFFSET_NUTS_DETECTION 5
+#define OFFSET_NUTS_DETECTION 12
 
 /* Colors. */
 extern cv::Scalar RED;
@@ -60,12 +60,22 @@ bool isIntersect(const cv::Rect& r1, const cv::Rect& r2);
 /**
  * @brief Updates maps of contours.
  * @param contours contours in frame.
+ * @param extContours map of IDs and contours of nuts.
  * @param nutsBboxes bounding boxes of nuts.
  * @param nutId nut Id for use in map.
  * @param yStart start height position of bounding line.
  * @param yEnd end height position of bounding line.
  */
-void updateBboxMap(pointMat& contours, std::map<int, cv::Rect>& nutsBboxes,
-                   int& nutId, const int yStart, const int yEnd);
+void updateMapNuts(pointMat& contours, std::map<int, cv::Rect>& nutsBboxes,
+                   std::map<int, Contour>& extContours, int& nutId, const int yStart,
+                   const int yEnd);
+
+/**
+ * @brief Checks is the contour is the nut or not.
+ * @param contour Contour of nut.
+ * @return true If contour is the nut.
+ * @return false If contour isn't the nut.
+ */
+bool isSuitable(Contour& contour);
 
 }  // namespace nf

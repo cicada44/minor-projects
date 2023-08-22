@@ -11,8 +11,8 @@
 #define BUTTON_ESC 27
 #define BUTTON_SPACE 32
 
-using pointMat = std::vector<std::vector<cv::Point>>;
-using pairContHier = std::pair<std::vector<cv::Vec4i>, pointMat>;
+using Contour = std::vector<cv::Point>;
+using pointMat = std::vector<Contour>;
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -24,15 +24,15 @@ int main(int argc, char* argv[]) {
 
     cv::VideoCapture video(windowName);
     cv::Mat frameFromVideo, gsFrame;
-    std::map<int, pairContHier> nuts;
+    std::map<int, Contour> nuts;
     std::map<int, cv::Rect> nutsBboxes;
-    pointMat contours;
     std::vector<cv::Vec4i> hierarchy;
+    pointMat contours, contoursExternal;
 
-    int keycode = -1, nutId = 0, yStart = -1, yEnd = -1;
+    int keycode = -1, nutId = -1, yStart = -1, yEnd = -1;
 
     while (video.read(frameFromVideo)) {
-        yStart = frameFromVideo.rows * 0.65;
+        yStart = frameFromVideo.rows * 0.60;
         yEnd = frameFromVideo.rows * 0.75;
 
         /* Filter frame binary. */
@@ -42,22 +42,24 @@ int main(int argc, char* argv[]) {
         cv::cvtColor(frameFromVideo, gsFrame, cv::COLOR_BGR2GRAY);
         nf::detectndrawContours(gsFrame, frameFromVideo, contours);
 
+        /* Update map of nuts. */
+        nf::updateMapNuts(contours, nutsBboxes, nuts, nutId, yStart, yEnd);
+
         /* Draw lines. */
         nf::drawLines(frameFromVideo);
 
         /* Show frame. */
         cv::imshow(windowName, frameFromVideo);
 
-        /* Update map of nuts. */
-        nf::updateBboxMap(contours, nutsBboxes, nutId, yStart, yEnd);
-
-        std::cout << nutsBboxes.size() << '\n';
-
         /* Process keyboard actions. */
-        keycode = cv::waitKey(17);
+        keycode = cv::waitKey(1);
         if (keycode == BUTTON_ESC) {
             cv::destroyAllWindows();
             break;
         }
+    }
+
+    for (auto& c : nuts) {
+        std::cout << nf::isSuitable(c.second);
     }
 }
