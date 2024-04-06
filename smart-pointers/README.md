@@ -4,6 +4,8 @@ This project provides the implementation of `unique_ptr` and `shared_ptr` classe
 
 ## Usage
 
+Follow this steps:
+
 ### Build
    
     cmake --preset release

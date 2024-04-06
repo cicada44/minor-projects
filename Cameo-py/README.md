@@ -4,6 +4,8 @@ Cameo is a Python3 project that captures video frames from a webcam using OpenCV
 
 ## Usage
 
+Follow this steps:
+
 ### Run
 
     python main.py

@@ -4,6 +4,8 @@ Detects broken nuts using OpenCV.
 
 ## Usage
 
+Follow this steps:
+
 ### Build
 
     cmake --preset release

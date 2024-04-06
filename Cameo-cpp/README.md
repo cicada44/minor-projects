@@ -4,6 +4,8 @@ Cameo is a C++ application for controlling and displaying camera frames and hand
 
 ## Usage
 
+Follow this steps:
+
 ### Build & Run
 
     make && make run

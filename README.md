@@ -28,6 +28,18 @@ Calculator of matrix Gauss Determinant on C/MPI.
 
 Detector of broken nuts in C++ using OpenCV.
 
+## [Soundex](./soundex/)
+
+Soundex hash implementation on C++.
+
+## [time_t](./time_t/)
+
+time_t type implementation on C++.
+
+## [tcp-server](./tcp-server/)
+
+TCP server/client chat implementation on C/Pthreads.
+
 ## License
 
 This repository is licensed under the UNLICENSE. Feel free to use the code examples for anything purposes, modify them, and distribute them as needed.
