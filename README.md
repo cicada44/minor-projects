@@ -20,6 +20,14 @@ A simple project of camera frames processing on Python3.
 
 A simple project of camera frames processing on C++.
 
+## [Parallel Gauss determinant](./gauss-determinant-mpi/)
+
+Calculator of matrix Gauss Determinant on C/MPI.
+
+## [Nut flow](./nut-flow/)
+
+Detector of broken nuts in C++ using OpenCV.
+
 ## License
 
 This repository is licensed under the UNLICENSE. Feel free to use the code examples for anything purposes, modify them, and distribute them as needed.
